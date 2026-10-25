@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src https://api.dexscreener.com; base-uri 'none'; form-action 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>TWINSCAN · Which coin is the real one?</title>
+  <meta name="description" content="Paste a name or CA. See every Solana coin that shares it, oldest first, with facts from live DexScreener data.">
+  <meta name="theme-color" content="#0b0d10">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TWINSCAN · Which coin is the real one?">
+  <meta property="og:description" content="Paste a name or CA. See every Solana coin with that name side by side: pair age, market cap, volume, profile and links.">
+  <meta property="og:image" content="https://twinscan-app.github.io/og.png">
+  <meta property="og:url" content="https://twinscan-app.github.io/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TWINSCAN · Which coin is the real one?">
+  <meta name="twitter:description" content="Paste a name or CA. See every Solana coin with that name side by side.">
+  <meta name="twitter:image" content="https://twinscan-app.github.io/og.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d10'/%3E%3Ccircle cx='12' cy='16' r='6.5' fill='%23c6f432'/%3E%3Ccircle cx='20' cy='16' r='6.5' fill='none' stroke='%23c6f432' stroke-width='2' stroke-dasharray='3 2.2'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.dexscreener.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0d10;
+      --surface: #12151a;
+      --surface-2: #181c23;
+      --line: #242a33;
+      --line-2: #313844;
+      --text: #e8ecf1;
+      --muted: #8b94a4;
+      --faint: #5d6675;
+      --accent: #c6f432;
+      --accent-ink: #0b0d10;
+      --accent-text: #c6f432;
+      --blue: #74b4ff;
+      --amber: #f0b44c;
+      --orange: #ff8a4c;
+      --pink: #ff6b9a;
+      --danger: #ff6b6b;
+      --shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 12px 40px -18px rgba(0,0,0,.6);
+      --radius: 14px;
+      --font: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #f5f6f8;
+        --surface: #ffffff;
+        --surface-2: #f0f2f5;
+        --line: #e2e6eb;
+        --line-2: #d3d9e0;
+        --text: #0e1116;
+        --muted: #5a6474;
+        --faint: #8a93a1;
+        --accent-text: #4a7300;
+        --blue: #1f6fd1;
+        --amber: #a8700a;
+        --orange: #c4511a;
+        --pink: #c22c63;
+        --danger: #c62828;
+        --shadow: 0 1px 2px rgba(15,20,30,.04), 0 12px 32px -20px rgba(15,20,30,.25);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 400 15px/1.5 var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    button, input { font: inherit; color: inherit; }
+    [hidden] { display: none !important; }
+    .wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .mono { font-family: var(--mono); font-size: .92em; letter-spacing: -.01em; }
+    .muted { color: var(--muted); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    /* header */
+    .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; letter-spacing: .04em; }
+    .brand svg { display: block; }
+    .ticker { font: 500 12px/1 var(--mono); padding: 5px 8px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); letter-spacing: 0; }
+    .top-links { display: flex; gap: 6px; }
+    .icon-link { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 14px; }
+    .icon-link:hover { color: var(--text); background: var(--surface-2); }
+
+    /* hero + search */
+    .hero { padding: 44px 0 28px; text-align: center; }
+    .hero h1 { margin: 0 auto; max-width: 15ch; font-size: clamp(32px, 6vw, 58px); line-height: 1.02; letter-spacing: -.035em; font-weight: 700; text-wrap: balance; }
+    .hero h1 em { font-style: normal; color: var(--accent-text); }
+    .hero p.lede { margin: 16px auto 0; max-width: 56ch; color: var(--muted); font-size: 17px; text-wrap: pretty; }
+    .scanned .hero { padding: 18px 0 20px; }
+    .scanned .hero h1 { max-width: none; font-size: clamp(22px, 3.2vw, 32px); }
+    .scanned .hero p.lede { display: none; }
+    .scanned .search { margin-top: 18px; }
+    .search { margin: 30px auto 0; max-width: 720px; display: flex; gap: 8px; padding: 6px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line-2); box-shadow: var(--shadow); }
+    .search:focus-within { border-color: color-mix(in srgb, var(--accent) 70%, var(--line-2)); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent), var(--shadow); }
+    .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; padding: 12px 12px; font-size: 17px; }
+    .search input::placeholder { color: var(--faint); }
+    .btn-scan { border: 0; border-radius: 11px; padding: 0 22px; background: var(--accent); color: var(--accent-ink); font-weight: 700; cursor: pointer; letter-spacing: .01em; }
+    .btn-scan:hover { filter: brightness(1.06); }
+    .btn-scan:active { transform: translateY(1px); }
+    .hints { margin: 14px auto 0; max-width: 720px; display: flex; flex-wrap: wrap; gap: 6px 8px; justify-content: center; align-items: center; color: var(--faint); font-size: 13px; }
+    .chip { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 999px; padding: 4px 11px; font-size: 13px; cursor: pointer; max-width: 22ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .chip:hover { color: var(--text); border-color: var(--line-2); background: var(--surface-2); }
+
+    /* results */
+    #results { padding: 8px 0 24px; min-height: 40px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .res-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px; padding: 20px 20px 16px; border-bottom: 1px solid var(--line); }
+    .eyebrow { margin: 0 0 4px; font: 500 12px/1.2 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; display: flex; align-items: center; gap: 8px; }
+    .live { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+    .res-head h2 { margin: 0; font-size: clamp(20px, 3vw, 26px); letter-spacing: -.02em; line-height: 1.15; text-wrap: balance; }
+    .res-head h2 q { quotes: "\201C" "\201D"; color: var(--accent-text); }
+    .res-head .sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-2); background: var(--surface-2); border-radius: 10px; padding: 7px 11px; font-size: 13.5px; font-weight: 500; cursor: pointer; text-decoration: none; white-space: nowrap; }
+    .btn:hover { border-color: var(--faint); }
+    .btn.done { border-color: color-mix(in srgb, var(--accent) 60%, var(--line-2)); color: var(--accent-text); }
+    .btn svg, .icon-link svg, .mini svg { flex: none; }
+
+    .facts { list-style: none; margin: 0; padding: 14px 20px; display: flex; flex-wrap: wrap; gap: 8px 22px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+    .facts li { display: flex; align-items: flex-start; gap: 8px; }
+    .facts .dot { margin-top: 6px; }
+    .facts b { color: var(--text); font-weight: 600; }
+    .dot { width: 8px; height: 8px; border-radius: 2px; flex: none; background: var(--c, var(--faint)); }
+
+    /* table */
+    .rows { list-style: none; margin: 0; padding: 0; }
+    .row { display: grid; grid-template-columns: 34px minmax(220px, 1.8fr) 122px 112px 100px minmax(130px, 1fr) 262px; gap: 14px; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+    .row:last-child { border-bottom: 0; }
+    .row.head { padding-top: 10px; padding-bottom: 10px; font: 500 11.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--faint); }
+    .row.you { background: color-mix(in srgb, var(--blue) 7%, transparent); }
+    .rank { font: 500 13px/1 var(--mono); color: var(--faint); }
+    .coin { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+    .avatar { width: 38px; height: 38px; border-radius: 10px; flex: none; object-fit: cover; background: var(--surface-2); border: 1px solid var(--line); display: grid; place-items: center; font: 600 13px/1 var(--mono); color: var(--muted); overflow: hidden; }
+    .coin-text { min-width: 0; }
+    .coin-name { font-weight: 600; font-size: 15.5px; line-height: 1.25; overflow-wrap: anywhere; }
+    .coin-name .sym { white-space: nowrap; color: var(--muted); font-weight: 500; font-family: var(--mono); font-size: 13px; margin-left: 6px; }
+    .coin-meta { font-size: 12.5px; color: var(--faint); margin-top: 2px; }
+    .flags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    .flag { --c: var(--faint); display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px 3px 7px; border-radius: 7px; font-size: 12px; font-weight: 500; line-height: 1.3; color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); border: 1px solid color-mix(in srgb, var(--c) 28%, transparent); }
+    .flag::before { content: ""; width: 6px; height: 6px; border-radius: 2px; background: var(--c); flex: none; }
+    .f-oldest { --c: var(--accent-text); }
+    .f-profile { --c: var(--blue); }
+    .f-none { --c: var(--amber); }
+    .f-fast { --c: var(--orange); }
+    .f-copy { --c: var(--pink); }
+    .f-you { --c: var(--blue); }
+    .cell .lbl { display: none; }
+    .num { font: 500 14.5px/1.3 var(--mono); letter-spacing: -.02em; }
+    .cell .sub { font-size: 12px; color: var(--faint); margin-top: 2px; line-height: 1.3; }
+    .links { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+    .prof { font-size: 12px; color: var(--muted); margin-right: 2px; }
+    .mini { display: inline-flex; align-items: center; justify-content: center; gap: 5px; height: 28px; min-width: 28px; padding: 0 7px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--muted); text-decoration: none; font-size: 12.5px; cursor: pointer; white-space: nowrap; }
+    .mini:hover { color: var(--text); border-color: var(--line-2); background: var(--surface-2); }
+    .mini.done { color: var(--accent-text); border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+    .none { font-size: 13px; color: var(--faint); }
+    .ca { display: flex; align-items: center; gap: 4px; min-width: 0; }
+    .ca code { font-family: var(--mono); font-size: 13px; color: var(--text); margin-right: 4px; white-space: nowrap; }
+
+    .notes { padding: 12px 20px 16px; font-size: 13px; color: var(--muted); display: grid; gap: 4px; border-top: 1px solid var(--line); }
+    details.similar { margin-top: 14px; }
+    details.similar > summary { cursor: pointer; list-style: none; padding: 14px 20px; color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 8px; }
+    details.similar > summary::-webkit-details-marker { display: none; }
+    details.similar > summary::before { content: "+"; font: 500 15px/1 var(--mono); width: 14px; color: var(--faint); }
+    details.similar[open] > summary::before { content: "−"; }
+    details.similar[open] > summary { border-bottom: 1px solid var(--line); }
+
+    .disclaimer { margin: 14px 2px 0; font-size: 13px; color: var(--faint); text-align: center; text-wrap: pretty; }
+
+    /* states */
+    .state { padding: 34px 24px; text-align: center; }
+    .state h3 { margin: 0 0 6px; font-size: 19px; letter-spacing: -.01em; }
+    .state p { margin: 0 auto; max-width: 52ch; color: var(--muted); }
+    .state .actions { justify-content: center; margin-top: 16px; }
+    .state.error h3 { color: var(--danger); }
+    .loading .status { padding: 16px 20px; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; border-bottom: 1px solid var(--line); }
+    .spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line-2); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+    .skel { height: 66px; margin: 0; border-bottom: 1px solid var(--line); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--text) 4%, transparent), transparent) 0 0 / 50% 100% no-repeat; animation: shimmer 1.3s ease-in-out infinite; }
+    .skel:last-child { border-bottom: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes shimmer { from { background-position: -50% 0; } to { background-position: 150% 0; } }
+    @media (prefers-reduced-motion: reduce) { .spin, .skel { animation: none; } }
+
+    /* explainer */
+    .explain { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; padding: 28px 0 8px; }
+    .explain .panel { padding: 22px; }
+    .explain h2 { margin: 0 0 14px; font-size: 18px; letter-spacing: -.01em; }
+    .legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
+    .legend li { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: start; font-size: 14px; color: var(--muted); }
+    .legend .flag { justify-self: start; }
+    .steps { margin: 0; padding: 0 0 0 18px; display: grid; gap: 9px; color: var(--muted); font-size: 14px; }
+    .steps b { color: var(--text); font-weight: 600; }
+
+    /* coin panel */
+    .coin-panel { margin: 16px 0 0; padding: 20px 22px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; }
+    .coin-panel p { margin: 0; max-width: 60ch; color: var(--muted); }
+    .coin-panel p b { color: var(--text); }
+    .coin-ca { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .coin-ca code { font-family: var(--mono); font-size: 13.5px; overflow-wrap: anywhere; margin-right: 4px; }
+    .btn-buy { background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 700; }
+    .btn-buy:hover { border-color: transparent; filter: brightness(1.06); }
+
+    footer { padding: 30px 0 40px; color: var(--faint); font-size: 13px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+    footer a { color: var(--muted); }
+    footer nav { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    /* responsive: rows become cards */
+    @media (max-width: 1020px) {
+      .row { grid-template-columns: 30px minmax(200px, 1.7fr) 118px 108px 96px minmax(120px, 1fr); }
+      .row .c-ca { grid-column: 2 / -1; }
+      .row.head .c-ca { display: none; }
+    }
+    @media (max-width: 760px) {
+      .wrap { padding: 0 16px; }
+      .hero { padding: 26px 0 20px; }
+      .hero p.lede { font-size: 15.5px; }
+      .search input { font-size: 16px; padding: 11px 8px; }
+      .btn-scan { padding: 0 16px; }
+      .res-head { padding: 16px; }
+      .facts { padding: 12px 16px; flex-direction: column; gap: 6px; }
+      .row.head { display: none; }
+      .row { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "coin coin coin" "age mcap vol" "links links links" "ca ca ca"; gap: 12px 12px; padding: 16px; }
+      .row .rank { display: none; }
+      .c-coin { grid-area: coin; }
+      .c-age { grid-area: age; }
+      .c-mcap { grid-area: mcap; }
+      .c-vol { grid-area: vol; }
+      .c-links { grid-area: links; }
+      .row .c-ca { grid-area: ca; grid-column: auto; }
+      .cell .lbl { display: block; font: 500 10.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--faint); margin-bottom: 4px; }
+      .num { font-size: 14px; }
+      .c-links .lbl, .c-ca .lbl { display: none; }
+      .ca { padding-top: 10px; border-top: 1px dashed var(--line); }
+      .ca code { flex: 1; }
+      .legend li { grid-template-columns: 1fr; gap: 4px; }
+      .notes, details.similar > summary { padding-left: 16px; padding-right: 16px; }
+      .explain { grid-template-columns: 1fr; }
+      .top-links .txt { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap top">
+    <a class="brand" href="./" aria-label="TWINSCAN home">
+      <svg width="34" height="22" viewBox="0 0 34 22" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#c6f432"/><circle cx="23" cy="11" r="9" fill="none" stroke="#c6f432" stroke-width="2" stroke-dasharray="3.4 2.6"/></svg>
+      <span>TWINSCAN</span>
+      <span class="ticker" data-ticker hidden>$TWINSCAN</span>
+    </a>
+    <nav class="top-links" aria-label="Project links">
+      <a class="icon-link" id="link-github" hidden target="_blank" rel="noopener noreferrer"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg><span class="txt">GitHub</span></a>
+      <a class="icon-link" id="link-x" hidden target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"/></svg><span class="txt">X</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <h1>Paste a name or CA. See which coin is <em>the real one.</em></h1>
+      <p class="lede">TWINSCAN lists every Solana coin that shares a name or ticker, side by side and oldest first, with the facts that tell them apart. Live from DexScreener.</p>
+      <form class="search" id="search" action="" method="get" role="search">
+        <label class="sr-only" for="q">Coin name, ticker or contract address</label>
+        <input id="q" name="q" type="search" placeholder="Name, $TICKER or contract address" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120" enterkeyhint="search">
+        <button class="btn-scan" type="submit">Scan</button>
+      </form>
+      <div class="hints" id="hints">
+        <span>Try</span>
+        <button class="chip" type="button" data-q="BONK">BONK</button>
+        <button class="chip" type="button" data-q="WIF">WIF</button>
+        <button class="chip" type="button" data-q="POPCAT">POPCAT</button>
+      </div>
+      <div class="hints" id="recent" hidden></div>
+    </section>
+
+    <section class="wrap" id="results" aria-live="polite"></section>
+
+    <section class="wrap explain" id="about">
+      <div class="panel">
+        <h2>Facts, not scores</h2>
+        <ul class="legend">
+          <li><span class="flag f-oldest">Oldest pair</span><span>Its first DexScreener pair was created before any other coin with this name.</span></li>
+          <li><span class="flag f-profile">Only one with a profile and links</span><span>No other coin in the list has a DexScreener profile with a website or socials.</span></li>
+          <li><span class="flag f-none">No profile and no links</span><span>DexScreener has no profile, image, website or socials for it.</span></li>
+          <li><span class="flag f-fast">Launched within 1 hour of the oldest</span><span>Its first pair appeared less than 60 minutes after the oldest coin's.</span></li>
+          <li><span class="flag f-copy">Same links as #1</span><span>It lists a website or social link that an older coin in the list already uses.</span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><b>Runs in your browser.</b> It calls DexScreener's public API directly. No server, no tracking.</li>
+          <li><b>Groups by exact match.</b> Same name or same ticker, ignoring case, spaces, symbols and a leading $.</li>
+          <li><b>Sorts by pair age.</b> Oldest first, with how long after the oldest each twin appeared.</li>
+          <li><b>Never asks for a wallet.</b> There is nothing to connect or sign here.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="wrap" id="coin" hidden>
+      <div class="panel coin-panel">
+        <p><b data-ticker>$TWINSCAN</b> is this project's ticker. The scanner is free for everyone and works the same whether you hold it or not.</p>
+        <div class="coin-ca" id="coin-ca"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <span>TWINSCAN shows public DexScreener data. It cannot prove which coin the real team made. Not financial advice.</span>
+    <nav>
+      <a href="https://docs.dexscreener.com/api/reference" target="_blank" rel="noopener noreferrer">Data: DexScreener API</a>
+      <a id="foot-github" hidden target="_blank" rel="noopener noreferrer">Source (MIT)</a>
+    </nav>
+  </footer>
+
+  <noscript><p class="wrap muted">TWINSCAN needs JavaScript to call DexScreener from your browser.</p></noscript>
+  <script src="app.js" defer></script>
+</body>
+</html>
